@@ -287,5 +287,7 @@ _again:
 
     printf("  Output %d\n", output - a_buffer->pos);
 
+    ngx_pfree(request_->pool, input);
+
     return true;
 }

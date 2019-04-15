@@ -111,5 +111,7 @@ bool NamedImportsContext::ParseSlice (ngx_buf_t* a_buffer)
 
     printf("  Output %d\n", output - a_buffer->pos);
 
+    ngx_pfree(request_->pool, input);
+
     return true;
 }

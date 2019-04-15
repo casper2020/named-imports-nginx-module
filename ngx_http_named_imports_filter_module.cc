@@ -188,7 +188,6 @@ static ngx_int_t ngx_http_named_imports_filter_module_header_filter (ngx_http_re
         printf("***** new request***\n");
         new (context) NamedImportsContext(a_r, (const char*) loc_conf->module_prefix.data);
         ngx_http_set_ctx(a_r, context, ngx_http_named_imports_filter_module);
-        //a_r->filter_need_in_memory = 1;
         ngx_http_clear_content_length(a_r);
         ngx_http_clear_accept_ranges(a_r);
     }
