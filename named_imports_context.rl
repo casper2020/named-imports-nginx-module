@@ -31,34 +31,46 @@
     variable cs  cs_;
 
     action start_module {
-      if ( ! (fc == '.' || fc == '/') ) {
-        if ( output < (last - prefix_.length()) ) {
-            strcpy((char*) output, prefix_.c_str());
-            output += prefix_.length();
-        } else {
-            return false;
+        ext_[0] = ext_[1] = ext_[2] = ext_[3]= 0;
+        if ( ! (fc == '.' || fc == '/') ) {
+            if ( output < (last - prefix_.length()) ) {
+                strcpy((char*) output, prefix_.c_str());
+                output += prefix_.length();
+            } else {
+                return false;
+            }
         }
-      }
     }
 
-    action end_module {
-      /* not used yet */
+    action add_extension {
+        if ( strcmp(ext_, ".js")) {
+            if ( output < (last - 3) ) {
+                *(output++) = '.';
+                *(output++) = 'j';
+                *(output++) = 's';
+            } else {
+                return false;
+            }
+        }
     }
 
     action cpchr {
-      if ( output < last ) {
-        *(output++) = fc;
-      } else {
-        return false;
-      }
+        ext_[0] = ext_[1];
+        ext_[1] = ext_[2];
+        ext_[2] = fc;
+        if ( output < last ) {
+            *(output++) = fc;
+        } else {
+            return false;
+        }
     }
 
     quote       = ( '\'' | '"' );
     ws          = [ \t];
-    imports     = (alnum | '{' | '}' | ',' | ws)+;
+    imports     = (alnum | '{' | '}' | ',' | '_' | '*' | '$' | space)+;
     module_name = (alnum | punct)+;
-    module      = quote %start_module module_name %end_module quote;
-    main        := (any* [\n] ws* 'import' ws* ( imports ws* 'from' ws+)? module ws* ';') $cpchr;
+    module      = quote %start_module module_name %add_extension quote;
+    main        := ( (zlen | any* [\n]) 'import' space* ( imports space* 'from' space+)? module ws* ';') $cpchr;
 
 }%%
 
@@ -73,13 +85,10 @@ NamedImportsContext::NamedImportsContext (ngx_http_request_t* a_r, const char* a
 
 /**
  * @brief Incremental parser initialization.
- *
- * @return The initialization result:
- *         @li True on success
- *         @li False on failure.
  */
 void NamedImportsContext::InitParse ()
 {
+    ext_[0] = ext_[1] = ext_[2] = ext_[3]= 0;
     %% write init;
 }
 

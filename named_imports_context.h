@@ -34,6 +34,7 @@ class NamedImportsContext
         int                 cs_;
         ngx_http_request_t* request_;
         std::string         prefix_;
+        char                ext_[4];
 
     public:
 
