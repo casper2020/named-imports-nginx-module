@@ -32,8 +32,12 @@
 
     action start_module {
       if ( ! (fc == '.' || fc == '/') ) {
-        strcpy((char*) output, prefix_.c_str());
-        output += prefix_.length();
+        if ( output < (last - prefix_.length()) ) {
+            strcpy((char*) output, prefix_.c_str());
+            output += prefix_.length();
+        } else {
+            return false;
+        }
       }
     }
 
@@ -42,7 +46,11 @@
     }
 
     action cpchr {
-      *(output++) = fc;
+      if ( output < last ) {
+        *(output++) = fc;
+      } else {
+        return false;
+      }
     }
 
     quote       = ( '\'' | '"' );
@@ -87,29 +95,25 @@ void NamedImportsContext::InitParse ()
  */
 bool NamedImportsContext::ParseSlice (ngx_buf_t* a_buffer)
 {
-    u_char* input        = a_buffer->pos;
-    size_t  input_length = a_buffer->last - a_buffer->pos;
-    char*   p            = (char*) input;
-    char*   pe           = p + input_length;
-    char*   eof          = NULL;
-    u_char* output       = (u_char*) ngx_pcalloc(request_->pool, input_length * 2);
+    u_char* input         = a_buffer->pos;
+    size_t  input_length  = a_buffer->last - a_buffer->pos;
+    char*   p             = (char*) input;
+    char*   pe            = p + input_length;
+    char*   eof           = NULL;
+    size_t  output_length = input_length * 1.3f;
+    u_char* output        = (u_char*) ngx_pcalloc(request_->pool, output_length);
+    u_char* last          = output + output_length;
 
-    printf("  Input len %d\n", input_length);
     if ( nullptr == output ) {
         return false;
     }
     a_buffer->pos   = output;
     a_buffer->start = output;
 
-    //output_   = a_output;
-    //out_size_ = a_out_size;
-
     %% write exec;
 
     a_buffer->last = output;
     a_buffer->end  = output;
-
-    printf("  Output %d\n", output - a_buffer->pos);
 
     ngx_pfree(request_->pool, input);
 

@@ -28,7 +28,7 @@
 #include "named_imports_context.h"
 
 
-#line 55 "named_imports_context.rl"
+#line 63 "named_imports_context.rl"
 
 
 
@@ -120,7 +120,7 @@ static const int fix_es6_imports_error = -1;
 static const int fix_es6_imports_en_main = 0;
 
 
-#line 58 "named_imports_context.rl"
+#line 66 "named_imports_context.rl"
 
 NamedImportsContext::NamedImportsContext (ngx_http_request_t* a_r, const char* a_prefix)
 {
@@ -144,7 +144,7 @@ void NamedImportsContext::InitParse ()
 	(  cs_) = fix_es6_imports_start;
 	}
 
-#line 76 "named_imports_context.rl"
+#line 84 "named_imports_context.rl"
 }
 
 /**
@@ -159,25 +159,23 @@ void NamedImportsContext::InitParse ()
  */
 bool NamedImportsContext::ParseSlice (ngx_buf_t* a_buffer)
 {
-    u_char* input        = a_buffer->pos;
-    size_t  input_length = a_buffer->last - a_buffer->pos;
-    char*   p            = (char*) input;
-    char*   pe           = p + input_length;
-    char*   eof          = NULL;
-    u_char* output       = (u_char*) ngx_pcalloc(request_->pool, input_length * 2);
+    u_char* input         = a_buffer->pos;
+    size_t  input_length  = a_buffer->last - a_buffer->pos;
+    char*   p             = (char*) input;
+    char*   pe            = p + input_length;
+    char*   eof           = NULL;
+    size_t  output_length = input_length * 1.3f;
+    u_char* output        = (u_char*) ngx_pcalloc(request_->pool, output_length);
+    u_char* last          = output + output_length;
 
-    printf("  Input len %d\n", input_length);
     if ( nullptr == output ) {
         return false;
     }
     a_buffer->pos   = output;
     a_buffer->start = output;
 
-    //output_   = a_output;
-    //out_size_ = a_out_size;
-
     
-#line 181 "named_imports_context.cc"
+#line 179 "named_imports_context.cc"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -253,24 +251,32 @@ _match:
 #line 33 "named_imports_context.rl"
 	{
       if ( ! ((*p) == '.' || (*p) == '/') ) {
-        strcpy((char*) output, prefix_.c_str());
-        output += prefix_.length();
+        if ( output < (last - prefix_.length()) ) {
+            strcpy((char*) output, prefix_.c_str());
+            output += prefix_.length();
+        } else {
+            return false;
+        }
       }
     }
 	break;
 	case 1:
-#line 40 "named_imports_context.rl"
+#line 44 "named_imports_context.rl"
 	{
       /* not used yet */
     }
 	break;
 	case 2:
-#line 44 "named_imports_context.rl"
+#line 48 "named_imports_context.rl"
 	{
-      *(output++) = (*p);
+      if ( output < last ) {
+        *(output++) = (*p);
+      } else {
+        return false;
+      }
     }
 	break;
-#line 274 "named_imports_context.cc"
+#line 280 "named_imports_context.cc"
 		}
 	}
 
@@ -280,12 +286,10 @@ _again:
 	_test_eof: {}
 	}
 
-#line 108 "named_imports_context.rl"
+#line 114 "named_imports_context.rl"
 
     a_buffer->last = output;
     a_buffer->end  = output;
-
-    printf("  Output %d\n", output - a_buffer->pos);
 
     ngx_pfree(request_->pool, input);
 

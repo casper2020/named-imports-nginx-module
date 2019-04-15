@@ -174,6 +174,12 @@ static ngx_int_t ngx_http_named_imports_filter_module_filter_init (ngx_conf_t* a
 #pragma mark - Body filter Handler
 #endif
 
+
+/**
+ * @brief Module header filter
+ *
+ * @param  a_r The http request to modify
+ */
 static ngx_int_t ngx_http_named_imports_filter_module_header_filter (ngx_http_request_t* a_r)
 {
     ngx_http_named_imports_filter_module_loc_conf_t* loc_conf;
@@ -181,13 +187,15 @@ static ngx_int_t ngx_http_named_imports_filter_module_header_filter (ngx_http_re
     loc_conf = (ngx_http_named_imports_filter_module_loc_conf_t*) ngx_http_get_module_loc_conf(a_r, ngx_http_named_imports_filter_module);
 
     if ( 1 == loc_conf->enable ) {
+        // ... create context and attach to the request ...
         NamedImportsContext* context = (NamedImportsContext*) ngx_pcalloc(a_r->pool, sizeof(NamedImportsContext));
         if ( context == NULL ) {
             return NGX_ERROR;
         }
-        printf("***** new request***\n");
         new (context) NamedImportsContext(a_r, (const char*) loc_conf->module_prefix.data);
         ngx_http_set_ctx(a_r, context, ngx_http_named_imports_filter_module);
+
+        // ... clear content lenght coz we'll change the body size in the filter ...
         ngx_http_clear_content_length(a_r);
         ngx_http_clear_accept_ranges(a_r);
     }
