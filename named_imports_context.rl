@@ -23,7 +23,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+
 #include "named_imports_context.h"
+
+#pragma clang diagnostic pop
 
 %%{
     machine fix_es6_imports;
@@ -95,12 +100,11 @@ void NamedImportsContext::InitParse ()
 /**
  * @brief Parse a slice of the stream.
  *
- * @param a_json The JSON string to be parsed.
- * @param a_length   The size of the JSON string.
+ * @param a_buffer buffer with part of HTTP body
  *
  * @return The parsing result:
- *         @li True on success
- *         @li False on failure.
+ *         @li true on success
+ *         @li false on failure.
  */
 bool NamedImportsContext::ParseSlice (ngx_buf_t* a_buffer)
 {
@@ -108,7 +112,6 @@ bool NamedImportsContext::ParseSlice (ngx_buf_t* a_buffer)
     size_t  input_length  = a_buffer->last - a_buffer->pos;
     char*   p             = (char*) input;
     char*   pe            = p + input_length;
-    char*   eof           = NULL;
     size_t  output_length = input_length * 1.3f;
     u_char* output        = (u_char*) ngx_pcalloc(request_->pool, output_length);
     u_char* last          = output + output_length;
@@ -125,6 +128,10 @@ bool NamedImportsContext::ParseSlice (ngx_buf_t* a_buffer)
     a_buffer->end  = output;
 
     ngx_pfree(request_->pool, input);
+
+    (void) fix_es6_imports_first_final;
+    (void) fix_es6_imports_error;
+    (void) fix_es6_imports_en_main;
 
     return true;
 }

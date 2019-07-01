@@ -19,8 +19,14 @@
  * along with named-imports-nginx-module.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
+
 #include "ngx_http_named_imports_filter_module.h"
 #include "named_imports_context.h"
+
+#pragma clang diagnostic pop
+
 
 #include <sys/stat.h>
 
@@ -113,7 +119,7 @@ ngx_module_t ngx_http_named_imports_filter_module = {
 /**
  * @brief Alocate the module configuration structure.
  *
- * @param a_cf
+ * @param a_cf nginx configuration
  */
 static void* ngx_http_named_imports_filter_module_create_loc_conf (ngx_conf_t* a_cf)
 {
@@ -131,9 +137,9 @@ static void* ngx_http_named_imports_filter_module_create_loc_conf (ngx_conf_t* a
 /**
  * @brief The merge conf callback.
  *
- * @param a_cf
- * @param a_parent
- * @param a_child
+ * @param a_cf nginx configuration
+ * @param a_parent parent configuration
+ * @param a_child child configuration
  */
 static char* ngx_http_named_imports_filter_module_merge_loc_conf (ngx_conf_t* a_cf, void* a_parent, void* a_child)
 {
