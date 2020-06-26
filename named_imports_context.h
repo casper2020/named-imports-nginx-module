@@ -27,23 +27,47 @@ extern "C" {
     #include <ngx_http.h>
 }
 #include <string>
+#include <sstream>
 
 class NamedImportsContext
 {
-    protected:
-        int                 cs_;
-        ngx_http_request_t* request_;
-        std::string         prefix_;
-        char                ext_[4];
+    protected: // data
+    
+        int                 cs_;                    //!< Ragel state variable
+        ngx_http_request_t* request_;               //!< The nginx request we are serving
+        char                prefix_[FILENAME_MAX];  //!< holds the bare module name
+        bool                copying_;               //!< true when copying input to output one character at a time
+        bool                cloning_;               //!< true when the input chain is cloned to allow changes
+        char*               bare_;                  //!<  used to collect bare module name char by char across chains
+        char                module_[FILENAME_MAX];  //!< holds the bare module name
+        size_t              rootlen_;               //!< lenght of the root on the file system
+        char                root_[FILENAME_MAX];    //!< holds the path of  the web root on the lenght of the root on the file system
+        size_t              modlen_;                //!< lenght of the resolved module
+        char                path_[FILENAME_MAX];    //!< buffer to build path names when looking up files on disk
+        u_char*             lastStart_;             //!<
 
-    public:
+    protected: // variables for the old-school comment parser
+
+        bool  comment_;       //!< true when inside a comment
+        char  previousChar_;  //!< preceeding char
+        bool  singleLine_;    //!< true when scanning a single line comment
+    
+    public: // methods
 
         NamedImportsContext (ngx_http_request_t* a_request, const char* a_prefix);
 
         void* operator new (size_t a_size, void* a_mem) { return a_mem; }
 
         // Incremental parser interface
-        void InitParse  ();
-        bool ParseSlice (ngx_buf_t* a_buffer); //uint8_t* a_output, size_t a_out_size, const char* a_input, size_t a_in_length);
+        void        InitParse               ();
+        bool        ParseSlice              (ngx_buf_t* a_buffer);
 
-}; // end of class DataParser
+    protected: // methods
+    
+        const char* ResolveModule            ();
+        const char* RetrieveFromPackageJson  ();
+        bool        IsFile                   (const char* a_name);
+        u_char*     Realloc                  (ngx_buf_t* a_buffer, u_char* a_marker);
+
+    
+}; // end of class NamedImportsContext
