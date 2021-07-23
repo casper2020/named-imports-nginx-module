@@ -134,7 +134,7 @@ NamedImportsContext::NamedImportsContext (ngx_http_request_t* a_r, const char* a
     quote         = ( '\'' | '"' );
     module_name   = (alnum | '_' | '-' | '/' | '@' | '.' )+ ${ if ( bare_ < baremax ) *(bare_++) = fc; };
     module        = (quote %module_start module_name %module_end quote);
-    main        := ( (zlen | any*) ('import' | 'export') space* (items space* 'from' space+)? module space* ';') $copy;
+    main        := ( (zlen | any*) ('import' | 'export') space* (items space* 'from' space*)? module space* ';') $copy;
 }%%
 
 %% write data;
