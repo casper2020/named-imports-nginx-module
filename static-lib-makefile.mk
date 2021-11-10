@@ -1,4 +1,4 @@
-#
+gi#
 # Copyright (c) 2017-2020 Cloudware S.A. All rights reserved.
 #
 # This file is part of named-imports-module.
@@ -31,7 +31,7 @@ EXECUTABLE_NAME      :=
 EXECUTABLE_MAIN_SRC  :=
 LIBRARY_TYPE         := static
 LIBRARY_NAME         := libnamed-imports-nginx-module.a
-VERSION              := $(shell cat $(PROJECT_SRC_DIR)/version)
+VERSION              := $(shell cat $(PROJECT_SRC_DIR)/versioning)
 CHILD_CWD            := $(THIS_DIR)
 CHILD_MAKEFILE       := $(firstword $(MAKEFILE_LIST))
 
