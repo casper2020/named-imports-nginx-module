@@ -75,7 +75,7 @@ OBJECTS := \
 
 include $(PACKAGER_DIR)/common/c++/common.mk
 
-set-dependencies: casper-connectors-dep-on casper-osal-dep-on cppcodec-dep-on zlib-dep-on libbcrypt-dep-on beanstalk-client-dep-on postgresql-dep-on icu-dep-on curl-dep-on jsoncpp-dep-on cppcodec-dep-on hiredis-dep-on
+set-dependencies: casper-connectors-dep-on casper-osal-dep-on cppcodec-dep-on zlib-dep-on libbcrypt-dep-on beanstalk-client-dep-on postgresql-dep-on icu-dep-on curl-dep-on jsoncpp-dep-on cppcodec-dep-on hiredis-dep-on openssl-dep-on
 
 # version
 version:

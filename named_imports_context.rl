@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/param.h> // MAX
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
