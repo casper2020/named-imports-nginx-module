@@ -1,4 +1,4 @@
-gi#
+#
 # Copyright (c) 2017-2020 Cloudware S.A. All rights reserved.
 #
 # This file is part of named-imports-module.
@@ -38,7 +38,9 @@ CHILD_MAKEFILE       := $(firstword $(MAKEFILE_LIST))
 # special case: this lib pulls all dependencies ( acts as a central point of configuration )
 PROCESS_DEPENDENCIES := true
 
-############################                                                                                                                                                             # BROKER VARIABLES                                                                                                                                                                       ############################
+############################
+# BROKER VARIABLES
+############################
 
 include $(PROJECT_SRC_DIR)/common.mk
 
