@@ -27,10 +27,9 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdocumentation"
+#pragma clang diagnostic ignored "-Wsign-conversion"
 
 #include "named_imports_context.h"
-
-#pragma clang diagnostic pop
 
 /**
  * @brief builds the context object
@@ -355,3 +354,5 @@ const char* NamedImportsContext::RetrieveFromPackageJson ()
     modlen_ = 0;
     return "";
 }
+
+#pragma clang diagnostic pop
