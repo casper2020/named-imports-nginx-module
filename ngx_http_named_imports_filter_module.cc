@@ -19,13 +19,15 @@
  * along with named-imports-nginx-module.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
+#include "cc/pragmas.h"
+
+CC_DIAGNOSTIC_PUSH()
+CC_DIAGNOSTIC_IGNORED("-Wdocumentation")
 
 #include "ngx_http_named_imports_filter_module.h"
 #include "named_imports_context.h"
 
-#pragma clang diagnostic pop
+CC_DIAGNOSTIC_POP()
 
 
 #include <sys/stat.h>

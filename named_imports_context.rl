@@ -25,10 +25,12 @@
 #include <sys/stat.h>
 #include <sys/param.h> // MAX
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdocumentation"
-#pragma clang diagnostic ignored "-Wsign-conversion"
-#pragma clang diagnostic ignored "-Wsign-compare"
+#include "cc/pragmas.h"
+
+CC_DIAGNOSTIC_PUSH()
+CC_DIAGNOSTIC_IGNORED("-Wdocumentation")
+CC_DIAGNOSTIC_IGNORED("-Wsign-conversion")
+CC_DIAGNOSTIC_IGNORED("-Wsign-compare")
 
 #include "named_imports_context.h"
 
@@ -356,4 +358,4 @@ const char* NamedImportsContext::RetrieveFromPackageJson ()
     return "";
 }
 
-#pragma clang diagnostic pop
+CC_DIAGNOSTIC_POP()
